@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+/*
+DESCRIPTION:
+Interpolate the position of why Y coordinate for a given X when given two data points.
+
+Using the formula:
+
+y = (y1 - y2) / (x1 - x2) * (x - x1) + y1
+*/
+
+int main(void) {
+
+//Variables
+float x1, y1, x2, y2 = 0;
+float x, y;
+
+//Input from user
+printf("Enter the first point separated by a space " ": ");
+scanf("%f%f", &x1, &y1);
+
+printf("Enter the second point separated by a space " ": ");
+scanf("%f%f", &x2, &y2);
+
+printf("Enter the x coordinate: ");
+scanf("%f", &x);
+
+//Calculation
+y = (y2 - y1) / (x2 - x1) * (x - x1) + y1;
+
+//Output
+printf("X1:%.2f\nY1:%.2f\nY1:%.2f\nY2:%.2f\n\nX:%.2f\nY:%.2f",x1, y1, x2, y2, x, y);
+}
