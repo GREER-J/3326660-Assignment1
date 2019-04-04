@@ -7,7 +7,7 @@ char encode(char *alphabet, char letter, char key);
 //Main
 int main(){
 
-char alphabet[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+char alphabet[26] = "abcdefghijklmnopqrstuvwxys";
 
 char letter = 97; //97 = a, 122 = z (for testing)
 char * pAlphabet = &alphabet;
@@ -53,3 +53,14 @@ char encode(char *alphabet, char letter, char key){
     char encoded_position = (position + key)%26;
     return encoded_position;
 }
+
+
+
+/*
+
+//THIS WORKS!
+
+//(m - 65 + 260) - k)%26 + 65
+
+There is really interesting possibilities in this. Future investigaiton required -- too tired now!
+*/
