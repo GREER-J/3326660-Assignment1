@@ -1,66 +1,54 @@
 #include <stdio.h>
 
-//Prototype
-char translate(char *alphabet, char letter);
-char encode(char *alphabet, char letter, char key);
+//Prototypes
+char translate(char letter, char key);
+char encode(char letter, char key);
+char decode(char letter, char key);
+char get_input(void);
 
 //Main
 int main(){
+    /*
+    char message, key, cipher, plaintext = 0;
 
-char alphabet[26] = "abcdefghijklmnopqrstuvwxys";
+    message = 65; // 65 = A, 90 = Z (for testing)
+    key = 12;
 
-char letter = 97; //97 = a, 122 = z (for testing)
-char * pAlphabet = &alphabet;
-char key = 5;
+    cipher = encode(message, key);
+    plaintext = decode(cipher, key);
 
-char test = encode(pAlphabet, letter, key);
+    printf("Message: %c\n", message);
+    printf("Ciphertext: %c\n", cipher);
+    printf("Plaintext: %c", plaintext);
+    */
 
-printf("%c", alphabet[test]);
+    get_input();
 
-return 0;
+    return 0;
+}
+/******************************   Encode / Decode    ************************************/
+
+char do_translation(char letter, char key){
+    char translated = ((((letter - 65) +260) + (key % 26)) % 26) + 65;
+    return translated;
+}
+
+char encode(char letter, char key){
+    return do_translation(letter, key);
 }
 
 
-//************************************************
-char translate(char *alphabet, char letter){
-/*
-AIM: to translate a given letter from ascii into an internal alphabet from which all calculations will be made. This will make the flow easier.
-
-Arguments:
-    -This function accepts a pointer to a list of type char, which contains the alphabet that the program will use.
-    -It also accepts a letter of type char, which it will match inside the alphabet.
-*/
-    //Will infinite loop if passed value outide of a:z
-    
-    //To ensure the while loop always fires
-    char position = -1;
-    
-
-    while(position < 0){//While a match has not been found
-        char x; //Loop counter
-        for(x = 0; x < 26; x++){
-            if(letter == alphabet[x]){
-                position = x;
-            }
-        }
-    }
-    return(position);
+char decode(char letter, char key){
+    return do_translation(letter, (-1 *key));
 }
 
-//************************************************
-char encode(char *alphabet, char letter, char key){
-    char position = translate(alphabet, letter);
-    char encoded_position = (position + key)%26;
-    return encoded_position;
+/********************************   Get input from user *******************************/
+
+char get_input(void){
+    char message[100];
+    printf("Please enter your message: ");
+    scanf("%s\ns", message);
+
+    printf("%s", message); 
+    return 0;
 }
-
-
-
-/*
-
-//THIS WORKS!
-
-//(m - 65 + 260) - k)%26 + 65
-
-There is really interesting possibilities in this. Future investigaiton required -- too tired now!
-*/
