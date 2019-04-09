@@ -6,6 +6,7 @@ RUNNING WISH LIST:
 
 
 #include <stdio.h>
+#include <stdlib.h>
 
 //Prototypes
 char translate(char letter, char key);
@@ -180,17 +181,25 @@ char do_casesar_brute_force(void){
     char known_text[] = "test";
     char known_cipher[4];
 
-    //Implement random later
-    int key = 56;
+    //Implement random key
+    int key = 16;
 
     int i;
     for(i = 0; i < 4; i++){
         
         known_cipher[i] = encode(known_text[i], key);
         printf("%c", known_cipher[i]);
+    }
 
-    //Calculation
-    
+    char k;
+
+    for(k = 0; k < 4; k++){
+        char i;
+        for(i = 0; i < 26; i++){
+            if(encode(known_text[k], i) == known_cipher[k]){
+                printf("\nSuccess %d", i);
+            }
+        }
     }
     return 0;
 }
