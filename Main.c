@@ -1,7 +1,7 @@
 /*
 RUNNING WISH LIST:
     1. Edit do_caesar_cipher_test such that is passes encode and decode instead of hardcoding them in those functions
-    2. Create size of function to make for loops neater / easier -- Use <type thingy>
+    2. Create size of function to make for loops neater / easier -- Use <type thingy>/
 */
 
 
@@ -17,17 +17,25 @@ int do_caesar_cipher_test(void);
 int do_caesar_encode_test(void);
 int do_caesar_decode_test(void);
 char do_casesar_brute_force(void);
+char encode_substitution(char *message, char *key);
 
 //Main
 int main(){
 
+    
+    char key[] = "phqgiumeaylnofdxjkrcvstzwb";
+    char text[] = "TEST MESSAGE";
+
+    encode_substitution(text, key);
+    //Testing
     //do_caesar_cipher_test();
     //get_input();
 
-    do_casesar_brute_force();
+    //do_casesar_brute_force();
 
     return 0;
 }
+
 /******************************   Encode / Decode    ************************************/
 
 /*  This funciton implements the actual math of the cipher.
@@ -79,7 +87,8 @@ char get_input(void){
     scanf("%s\ns", message);
 
     //For testing
-    printf("%s", message);
+    /*THIS CURRENTLY DOESN'T WORK AS IT STOPS PRINTING AT A SPACE*/
+    //printf("%[^/n]s", message);
 
     int i;
     for(i=0; i<10; i++){
@@ -201,5 +210,30 @@ char do_casesar_brute_force(void){
             }
         }
     }
+    return 0;
+}
+
+/********************************   SUBSTITUTION CIPHER *******************************/
+
+
+/********************************   Encode Substitution cipher *******************************/
+
+char encode_substitution(char *message, char *key){
+    //Substitution cipher
+    char i;
+    for(i = 0; i < 12; i++){
+        char position = message[i];
+        
+        if(position > 64){
+            position -= 65;
+            printf("%c", key[position]);
+        }
+
+        else{
+            printf("%c", position);
+        }
+        
+    }
+
     return 0;
 }
