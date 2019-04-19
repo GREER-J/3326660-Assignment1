@@ -1,35 +1,44 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 
 
 //Caesar Prototypes
-
-
 char caesar_do_translation(char letter, char key);
 void caesar_encode(char *message, int msg_size, char key, char *translated);
 void caesar_decode(char *message, int msg_size, char key, char *translated);
 void do_caesar_cipher(char *message, int msg_size, char key, char mode);
+void do_casesar_brute_force(void);
+
 
 //Substitution Prototypes
-char encode_substitution(char letter, char *key);
-char * do_encode_substitution(char *message, char * key, int size);
+void substitution_encode(char *message, int msg_size, char *key, char *translated);
+void substitution_decode(char *message, int msg_size, char *key, char *translated);
+void do_substitution_cipher(char *message, int msg_size, char *key, char mode);
 
 //Menu Prototypes
 char get_input(void);
 void output(char *message, int msg_size);
+void menu(void);
 
 
 //Main
 int main(){
-    char message[] = "TEST";
-    int msg_size = sizeof(message) / sizeof(message[0]) - 1;
-    int key = 11;
-    char translated[msg_size];
+    menu();
+/*
+    //Substitution
+char key[] = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
+char message[] = "TEST MESSAGE";
+//char message[] = "CIRC OIRRPMI";
+int msg_size = sizeof(message) / sizeof(message[0]) -1;
+char translated[msg_size];
 
-    do_caesar_cipher(message, msg_size, key, 1);
+do_substitution_cipher(message, msg_size, key, 1);
+
+    //do_casesar_brute_force();
+    //do_caesar_cipher(message, msg_size, key, 1);
 
     //get_input();
+    */
     return 0;
 }
 
@@ -72,74 +81,74 @@ void do_caesar_cipher(char *message, int msg_size, char key, char mode){
 
 /********************************   Attack Caeser cipher *******************************/
 
-/*
-char do_casesar_brute_force(void){
-    //Setup
-
-    char known_text[] = "test";
-    char known_cipher[4];
-
-    //Implement random key
-    int key = 16;
-    int size = 4;
-
-    int i;
-    for(i = 0; i < size; i++){
-        
-        known_cipher[i] = encode(known_text[i], key);
-        printf("%c", known_cipher[i]);
-    }
+void do_casesar_brute_force(void){
+    printf("Brute Force\n\n");
+    char cipher[] = "EPDE";
+    char msg_size = 4;
+    char translated[msg_size];
 
     char k;
-
-    for(k = 0; k < 4; k++){
-        char i;
-        for(i = 0; i < 26; i++){
-            if(encode(known_text[k], i) == known_cipher[k]){
-                printf("\nSuccess %d", i);
-            }
-        }
+    for(k = 1; k < 26; k++){
+        printf("%d: ", k);
+        caesar_decode(cipher, msg_size, k, translated);
+        output(translated, 4);
+        printf("\n");
     }
-    return 0;
 }
-*/
 
 
 /********************************   SUBSTITUTION CIPHER *******************************/
 
 
-/********************************   Encode Substitution cipher *******************************/
+void substitution_encode(char *message, int msg_size, char *key, char *translated){
 
-char encode_substitution(char letter, char *key){
-    //Substitution cipher
-    if (letter > 64){
-        letter -= 65;
-        char encoded = key[letter];
-        return encoded;
-    }
-    else{
-        return letter;
+    char i;
+    for(i = 0; i < msg_size; i++){
+        char position = message[i];
+        if(position > 65){
+            position -= 65;
+            translated[i] =  key[position];
+        }
+        else{
+            translated[i] = position;
+        }
+    
     }
 }
 
-
-/********************************   Do Encode Substitution cipher *******************************/
-
-char * do_encode_substitution(char *message, char * key, int size){
-    static char encoded[14];
+void substitution_decode(char *message, int msg_size, char *key, char *translated){
     char i;
-    for(i = 0; i < size; i++){
-        encoded[i] = encode_substitution(message[i], key);
+    for(i = 0; i < msg_size; i++){
+        char letter = message[i];
+        if(letter > 64){
+            char p;
+            for(p = 0; p < 26; p++){
+                if(letter == key[p]){
+                    translated[i] = p + 65;
+                }
+            }
+        }
+        else{
+            translated[i] = letter;
+        }
     }
-    return encoded;
+    }
+
+void do_substitution_cipher(char *message, int msg_size, char *key, char mode){
+    char translated[msg_size];
+    if(mode ==1){
+        substitution_encode(message, msg_size, key, translated);
+    }
+    else if(mode == 2){
+        substitution_decode(message, msg_size, key, translated);
+    }
+    output(translated, msg_size);
 }
 
 
 
 
 /********************************  MENU FUNCTIONS *******************************/
-
-/********************************   Get input from user *******************************/
 
 char get_input(void){
     char message[100];
@@ -162,5 +171,51 @@ void output(char *message, int msg_size){
     char i;
     for(i = 0; i < msg_size; i++){
         printf("%c", message[i]);
+    }
+}
+
+void menu(void){
+    int flag = -1;
+    while(flag == -1){
+        printf("Press one (1) to encode with the caesar cipher\n");
+        printf("Press two (2) to decode with the caesar cipher\n");
+        printf("Press three (3) to encode with the substituion cipher\n");
+        printf("Press three (4) to decode with the substituion cipher\n");
+        printf("Your answer: ");
+        scanf("%d", &flag);
+
+        switch(flag){
+            case 1:;
+            printf("\n");
+            char message[] = "TEST";
+            char msg_size = sizeof(message) / sizeof(message[0]) -1;
+            char key = 11;
+            do_caesar_cipher(message, msg_size, key, 1);
+            break;
+
+            case 2:;
+            printf("\n");
+            char message_a[] = "EPDE";
+            char msg_size_a = sizeof(message_a) / sizeof(message_a[0]) -1;
+            char key_a = 11;
+            do_caesar_cipher(message_a, msg_size_a, key_a, 2);
+            break;
+
+            case 3:;
+            printf("\n");
+            char message_b[] = "TEST";
+            char msg_size_b = sizeof(message_a) / sizeof(message_a[0]) -1;
+            char key_b[] = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
+            do_substitution_cipher(message_b, msg_size_b, key_b, 1);
+            break;
+
+            case 4:;
+            printf("\n");
+            char message_c[] = "CIRC";
+            char msg_size_c = sizeof(message_a) / sizeof(message_a[0]) -1;
+            char key_c[] = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
+            do_substitution_cipher(message_b, msg_size_b, key_b, 2);
+            break;
+        }
     }
 }
