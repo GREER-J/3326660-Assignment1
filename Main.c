@@ -1,195 +1,78 @@
-/*
-RUNNING WISH LIST:
-    1. Edit do_caesar_cipher_test such that is passes encode and decode instead of hardcoding them in those functions
-    2. Create size of function to make for loops neater / easier -- Use <type thingy>/
-*/
-
 
 #include <stdio.h>
 #include <stdlib.h>
 
-//Prototypes
-char translate(char letter, char key);
-char encode(char letter, char key);
-char decode(char letter, char key);
+
+//Caesar Prototypes
+
+
+char caesar_do_translation(char letter, char key);
+void caesar_encode(char *message, int msg_size, char key, char *translated);
+void caesar_decode(char *message, int msg_size, char key, char *translated);
+void do_caesar_cipher(char *message, int msg_size, char key, char mode);
+
+//Substitution Prototypes
+char encode_substitution(char letter, char *key);
+char * do_encode_substitution(char *message, char * key, int size);
+
+//Menu Prototypes
 char get_input(void);
-int do_caesar_cipher_test(void);
-int do_caesar_encode_test(void);
-int do_caesar_decode_test(void);
-char do_casesar_brute_force(void);
-char encode_substitution(char *message, char *key);
+void output(char *message, int msg_size);
+
 
 //Main
 int main(){
+    char message[] = "TEST";
+    int msg_size = sizeof(message) / sizeof(message[0]) - 1;
+    int key = 11;
+    char translated[msg_size];
 
-    
-    char key[] = "phqgiumeaylnofdxjkrcvstzwb";
-    char text[] = "TEST MESSAGE";
+    do_caesar_cipher(message, msg_size, key, 1);
 
-    encode_substitution(text, key);
-    //Testing
-    //do_caesar_cipher_test();
     //get_input();
-
-    //do_casesar_brute_force();
-
     return 0;
 }
 
-
 /********************************   CAESAR CIPHER *******************************/
-
 
 /******************************   Encode / Decode    ************************************/
 
-/******************************   Do Encode Caesar Cipher    ************************************/
 
-/*  This funciton implements the actual math of the cipher.
-INPUTS: the letter to be encoded or decoded as a char (ascii number) ; key - number to be shifted by
-CALCULATION: 
-                1) takes the given letter and takes away 65. This translates the letter to it's position from a capital A (65 in ascii)
-                2) Adds 260 to ensure that the total is alays positive, yet does not effect the % command later
-                3) Takes the result of the key % 26 (to try account any number key) and adds this to the result from 2
-                4) Takes this whole thing and % 26, this will gives an ajusted distance from A
-                5) Add 65 to turn it back into ascii text
-                6) Returns this value
-OUTPUT: The letter shifted by the key value in ascii code
-*/
-
-char do_translation(char letter, char key){
+char caesar_do_translation(char letter, char key){
     char translated = ((((letter - 65) +260) + (key % 26)) % 26) + 65;
     return translated;
 }
 
-
-/******************************   Encode Caesar Cipher Funciton    ************************************/
-
-/* This function utilises the previous function to encode a given letter with a given key
-INPUT: A letter to encrypt (given in ascii code) ; a key - the number of letter to shift by
-CALCULATION:
-                1) Calls the do_translation() function and passes the given key and letter
-                2) Returns the output of do_translation() to the program
-OUTPUT: The letter shifted by the given key value in ascii code
-*/
-char encode(char letter, char key){
-    return do_translation(letter, key);
-}
-
-
-/******************************   Decode Caesar Cipher Funciton    ************************************/
-
-/* This function utilises the do_translation function to decode a given letter with a given key
-INPUT: A letter to decrypt (given in ascii code) ; a key - the number of letter to shift by
-CALCULATION:
-                1) The given key is * by -1 to put a negative sign in front of it
-                2) Calls the do_translation() function and passes the given key and letter
-                3) Returns the output of do_translation() to the program
-OUTPUT: The letter shifted by the given key value in ascii code
-*/
-char decode(char letter, char key){
-    return do_translation(letter, (-1 * key));
-}
-
-
-/********************************   Caesar Cipher Test Functions *******************************/
-
-/******************************   Do Caesar Cipher Tests Function    ************************************/
-
-/*  This function gives the encode function a set input and tests the output against an expected output for testing purposes
-INPUT: This funciton requires no input
-CALCULATION:
-*/
-int do_caesar_cipher_test(void){
-    char first = do_caesar_encode_test();
-    char second = do_caesar_decode_test();
-
-    if (first == 1 && second == 1){
-        return 1;
-        }
-    else if (first != 1){
-        printf("The encode function failed on %c", first);
-    }
-    else if (second != 1){
-        printf("The decode function failed on %c", second);
-    }
-
-return 0;
-}
-
-
-/********************************  Caesar Cipher Encode Test  *******************************/
-//Test known values against the encodes functions output
-int do_caesar_encode_test(void){
-    char key, fail_char = 0;
-    char plaintext[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char encoded[] = "LMNOPQRSTUVWXYZABCDEFGHIJK";
-    key = 11;
-
-    // While nothing fails the test
-    fail_char = -1;
-    //Flag set to 100 to indicate full test passed
-    while((fail_char <0) && (fail_char != 100)){
+void caesar_encode(char *message, int msg_size, char key, char *translated){
     char i;
-    
-    for(i = 0; i < 26; i++){
-        char output = encode(plaintext[i], key);
-        
-        if (output != encoded[i]){
-            fail_char = plaintext[i];
-            return fail_char;
-        }
-        }
-        fail_char = 100;
-        return 1;
+    for(i = 0; i < msg_size; i++){
+        translated[i] =  caesar_do_translation(message[i], key);
     }
-
-    //Return WTF thing This should never run but it shuts the compiler up.
-    return 0;
 }
 
-
-/********************************   Test Caesar Cipher Decode Function *******************************/
-
-int do_caesar_decode_test(void){
-    char key, fail_char = 0;
-    char plaintext[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char encoded[] = "LMNOPQRSTUVWXYZABCDEFGHIJK";
-    key = 11;
-
-    // While nothing fails the test
-    fail_char = -1;
-    //Flag set to 100 to indicate full test passed
-    while((fail_char <0) && (fail_char != 100)){
+void caesar_decode(char *message, int msg_size, char key, char *translated){
     char i;
-    
-    for(i = 0; i < 26; i++){
-        char output = decode(encoded[i], key);
-        if (output != plaintext[i]){
-            fail_char = plaintext[i];
-            return fail_char;
-        }
+    for(i = 0; i < msg_size; i++){
+        translated[i] =  caesar_do_translation(message[i], (-1 * key));
     }
-    fail_char = 100;
-    return 1;
-    }
-    return 0;
 }
+
+void do_caesar_cipher(char *message, int msg_size, char key, char mode){
+    char translated[msg_size];
+    if(mode ==1){
+        caesar_encode(message, msg_size, key, translated);
+    }
+    else if(mode == 2){
+        caesar_decode(message, msg_size, key, translated);
+    }
+    output(translated, msg_size);
+}
+
 
 
 /********************************   Attack Caeser cipher *******************************/
 
-/******************************   Do Caesar Cipher Brute Force Attack Funciton    ************************************/
-
 /*
-Attack plan for brute force
-
-Setup: encrypt known value "test" with random key
-CALCULATION:
-            `1) Loop through numbers 1 - 25 with for Loop
-                1.5) Decrypt the known cipher text with incremented key
-            2) If the decrypt of the known cipher matches the known plaintext then return key
-*/
-
 char do_casesar_brute_force(void){
     //Setup
 
@@ -198,9 +81,10 @@ char do_casesar_brute_force(void){
 
     //Implement random key
     int key = 16;
+    int size = 4;
 
     int i;
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < size; i++){
         
         known_cipher[i] = encode(known_text[i], key);
         printf("%c", known_cipher[i]);
@@ -218,9 +102,7 @@ char do_casesar_brute_force(void){
     }
     return 0;
 }
-
-
-
+*/
 
 
 /********************************   SUBSTITUTION CIPHER *******************************/
@@ -228,32 +110,34 @@ char do_casesar_brute_force(void){
 
 /********************************   Encode Substitution cipher *******************************/
 
-char encode_substitution(char *message, char *key){
+char encode_substitution(char letter, char *key){
     //Substitution cipher
-    char i;
-    for(i = 0; i < 12; i++){
-        char position = message[i];
-        
-        if(position > 64){
-            position -= 65;
-            printf("%c", key[position]);
-        }
-
-        else{
-            printf("%c", position);
-        }
-        
+    if (letter > 64){
+        letter -= 65;
+        char encoded = key[letter];
+        return encoded;
     }
+    else{
+        return letter;
+    }
+}
 
-    return 0;
+
+/********************************   Do Encode Substitution cipher *******************************/
+
+char * do_encode_substitution(char *message, char * key, int size){
+    static char encoded[14];
+    char i;
+    for(i = 0; i < size; i++){
+        encoded[i] = encode_substitution(message[i], key);
+    }
+    return encoded;
 }
 
 
 
 
-
 /********************************  MENU FUNCTIONS *******************************/
-
 
 /********************************   Get input from user *******************************/
 
@@ -271,4 +155,12 @@ char get_input(void){
         printf("%c", message[i]);
     }
     return 0;
+}
+
+
+void output(char *message, int msg_size){
+    char i;
+    for(i = 0; i < msg_size; i++){
+        printf("%c", message[i]);
+    }
 }
