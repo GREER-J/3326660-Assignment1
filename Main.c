@@ -36,7 +36,13 @@ int main(){
     return 0;
 }
 
+
+/********************************   CAESAR CIPHER *******************************/
+
+
 /******************************   Encode / Decode    ************************************/
+
+/******************************   Do Encode Caesar Cipher    ************************************/
 
 /*  This funciton implements the actual math of the cipher.
 INPUTS: the letter to be encoded or decoded as a char (ascii number) ; key - number to be shifted by
@@ -55,6 +61,9 @@ char do_translation(char letter, char key){
     return translated;
 }
 
+
+/******************************   Encode Caesar Cipher Funciton    ************************************/
+
 /* This function utilises the previous function to encode a given letter with a given key
 INPUT: A letter to encrypt (given in ascii code) ; a key - the number of letter to shift by
 CALCULATION:
@@ -66,6 +75,8 @@ char encode(char letter, char key){
     return do_translation(letter, key);
 }
 
+
+/******************************   Decode Caesar Cipher Funciton    ************************************/
 
 /* This function utilises the do_translation function to decode a given letter with a given key
 INPUT: A letter to decrypt (given in ascii code) ; a key - the number of letter to shift by
@@ -79,25 +90,11 @@ char decode(char letter, char key){
     return do_translation(letter, (-1 * key));
 }
 
-/********************************   Get input from user *******************************/
 
-char get_input(void){
-    char message[100];
-    printf("Please enter your message: ");
-    scanf("%s\ns", message);
+/********************************   Caesar Cipher Test Functions *******************************/
 
-    //For testing
-    /*THIS CURRENTLY DOESN'T WORK AS IT STOPS PRINTING AT A SPACE*/
-    //printf("%[^/n]s", message);
+/******************************   Do Caesar Cipher Tests Function    ************************************/
 
-    int i;
-    for(i=0; i<10; i++){
-        printf("%c", message[i]);
-    }
-    return 0;
-}
-
-/********************************   Test Functions *******************************/
 /*  This function gives the encode function a set input and tests the output against an expected output for testing purposes
 INPUT: This funciton requires no input
 CALCULATION:
@@ -119,6 +116,9 @@ int do_caesar_cipher_test(void){
 return 0;
 }
 
+
+/********************************  Caesar Cipher Encode Test  *******************************/
+//Test known values against the encodes functions output
 int do_caesar_encode_test(void){
     char key, fail_char = 0;
     char plaintext[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -148,6 +148,8 @@ int do_caesar_encode_test(void){
 }
 
 
+/********************************   Test Caesar Cipher Decode Function *******************************/
+
 int do_caesar_decode_test(void){
     char key, fail_char = 0;
     char plaintext[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -173,7 +175,11 @@ int do_caesar_decode_test(void){
     return 0;
 }
 
+
 /********************************   Attack Caeser cipher *******************************/
+
+/******************************   Do Caesar Cipher Brute Force Attack Funciton    ************************************/
+
 /*
 Attack plan for brute force
 
@@ -213,6 +219,10 @@ char do_casesar_brute_force(void){
     return 0;
 }
 
+
+
+
+
 /********************************   SUBSTITUTION CIPHER *******************************/
 
 
@@ -235,5 +245,30 @@ char encode_substitution(char *message, char *key){
         
     }
 
+    return 0;
+}
+
+
+
+
+
+/********************************  MENU FUNCTIONS *******************************/
+
+
+/********************************   Get input from user *******************************/
+
+char get_input(void){
+    char message[100];
+    printf("Please enter your message: ");
+    scanf("%s\ns", message);
+
+    //For testing
+    /*THIS CURRENTLY DOESN'T WORK AS IT STOPS PRINTING AT A SPACE*/
+    //printf("%[^/n]s", message);
+
+    int i;
+    for(i=0; i<10; i++){
+        printf("%c", message[i]);
+    }
     return 0;
 }
