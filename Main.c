@@ -1,5 +1,7 @@
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 //Caesar Prototypes
@@ -8,6 +10,7 @@ void caesar_encode(char *message, int msg_size, char key, char *translated);
 void caesar_decode(char *message, int msg_size, char key, char *translated);
 void do_caesar_cipher(char *message, int msg_size, char key, char mode);
 void do_casesar_brute_force(void);
+int caesar_get_key(void);
 
 
 //Substitution Prototypes
@@ -16,29 +19,16 @@ void substitution_decode(char *message, int msg_size, char *key, char *translate
 void do_substitution_cipher(char *message, int msg_size, char *key, char mode);
 
 //Menu Prototypes
-char get_input(void);
+int get_input(char *message);
 void output(char *message, int msg_size);
+void sanitize(char *message, int msg_size);
 void menu(void);
 
 
 //Main
 int main(){
     menu();
-/*
-    //Substitution
-char key[] = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
-char message[] = "TEST MESSAGE";
-//char message[] = "CIRC OIRRPMI";
-int msg_size = sizeof(message) / sizeof(message[0]) -1;
-char translated[msg_size];
 
-do_substitution_cipher(message, msg_size, key, 1);
-
-    //do_casesar_brute_force();
-    //do_caesar_cipher(message, msg_size, key, 1);
-
-    //get_input();
-    */
     return 0;
 }
 
@@ -55,14 +45,27 @@ char caesar_do_translation(char letter, char key){
 void caesar_encode(char *message, int msg_size, char key, char *translated){
     char i;
     for(i = 0; i < msg_size; i++){
-        translated[i] =  caesar_do_translation(message[i], key);
+
+        if(message[i] >= 65 && message[i] <= 90){
+            translated[i] =  caesar_do_translation(message[i], key);
+        }
+        else{
+            translated[i] = message[i];
+        }
+        
     }
 }
 
 void caesar_decode(char *message, int msg_size, char key, char *translated){
     char i;
     for(i = 0; i < msg_size; i++){
-        translated[i] =  caesar_do_translation(message[i], (-1 * key));
+
+                if(message[i] >= 65 && message[i] <= 90){
+            translated[i] =  caesar_do_translation(message[i], (-1 * key));
+        }
+        else{
+            translated[i] = message[i];
+        }
     }
 }
 
@@ -77,7 +80,12 @@ void do_caesar_cipher(char *message, int msg_size, char key, char mode){
     output(translated, msg_size);
 }
 
-
+int caesar_get_key(void){
+    int key;
+    printf("\n\nPlease enter a key: ");
+    scanf("%d", &key);
+    return key;
+}
 
 /********************************   Attack Caeser cipher *******************************/
 
@@ -150,20 +158,14 @@ void do_substitution_cipher(char *message, int msg_size, char *key, char mode){
 
 /********************************  MENU FUNCTIONS *******************************/
 
-char get_input(void){
-    char message[100];
+/********************************   Get input from user *******************************/
+
+int get_input(char *message){
     printf("Please enter your message: ");
-    scanf("%s\ns", message);
-
-    //For testing
-    /*THIS CURRENTLY DOESN'T WORK AS IT STOPS PRINTING AT A SPACE*/
-    //printf("%[^/n]s", message);
-
-    int i;
-    for(i=0; i<10; i++){
-        printf("%c", message[i]);
-    }
-    return 0;
+    scanf(" %[^\n]s", message);
+    int msg_size = strlen(message);
+    sanitize(message, msg_size);
+    return msg_size;
 }
 
 
@@ -174,48 +176,59 @@ void output(char *message, int msg_size){
     }
 }
 
+void sanitize(char *message, int msg_size){
+    char i;
+    for(i = 0; i < msg_size; i++){
+        if(message[i] >= 97 && message[i] <= 122){
+            message[i] -= 32;
+        }
+    }
+}
+
 void menu(void){
-    int flag = -1;
-    while(flag == -1){
+        int flag = -1;
+        char message[100], key, key_sub[30];
+        int msg_size;
         printf("Press one (1) to encode with the caesar cipher\n");
         printf("Press two (2) to decode with the caesar cipher\n");
         printf("Press three (3) to encode with the substituion cipher\n");
         printf("Press three (4) to decode with the substituion cipher\n");
         printf("Your answer: ");
-        scanf("%d", &flag);
+        scanf(" %d", &flag);
 
         switch(flag){
             case 1:;
             printf("\n");
-            char message[] = "TEST";
-            char msg_size = sizeof(message) / sizeof(message[0]) -1;
-            char key = 11;
+            msg_size = get_input(message);
+            key = caesar_get_key();
             do_caesar_cipher(message, msg_size, key, 1);
             break;
 
             case 2:;
             printf("\n");
-            char message_a[] = "EPDE";
-            char msg_size_a = sizeof(message_a) / sizeof(message_a[0]) -1;
-            char key_a = 11;
-            do_caesar_cipher(message_a, msg_size_a, key_a, 2);
+            msg_size = get_input(message);
+            key = caesar_get_key();
+            do_caesar_cipher(message, msg_size, key, 2);
             break;
 
             case 3:;
             printf("\n");
-            char message_b[] = "TEST";
-            char msg_size_b = sizeof(message_a) / sizeof(message_a[0]) -1;
-            char key_b[] = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
-            do_substitution_cipher(message_b, msg_size_b, key_b, 1);
+            msg_size =  get_input(message);
+            //key_sub = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
+            do_substitution_cipher(message, msg_size, key_sub, 1);
             break;
 
             case 4:;
             printf("\n");
-            char message_c[] = "CIRC";
-            char msg_size_c = sizeof(message_a) / sizeof(message_a[0]) -1;
-            char key_c[] = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
-            do_substitution_cipher(message_b, msg_size_b, key_b, 2);
+            msg_size  = get_input(message);
+            //key_sub = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
+            do_substitution_cipher(message, msg_size, key_sub, 2);
             break;
+
+            default:
+            printf("\n\n");
+            printf("Invalid entry: Please try again.");
+            printf("\n\n");
+            menu();
         }
-    }
 }
