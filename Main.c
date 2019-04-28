@@ -22,14 +22,14 @@ int get_input(char *message, char *code, char *order);
 void output(char *message, int msg_size);
 void sanitize(char *message, int msg_size);
 int get_orders(char *message, int msg_size, char *code, char *order);
+void menu(char *message, char code, char order, int msg_size);
 
 
 //Main
 int main(void) {
-    char message[1000], order, code = 0;
+    char message[1000],key[27], order, code = 0;
     int msg_size = get_input(message, &code, &order);
-
-    printf("%c: %c", code, order);
+    menu(message, code, order, msg_size);
     printf("\n\n");
     output(message, msg_size);
     return 0;
@@ -177,16 +177,16 @@ int get_input(char *message, char *code, char *order){
 
 
 void output(char *message, int msg_size){
-    char i;
+    int i;
     for(i = 0; i < msg_size; i++){
         printf("%c", message[i]);
     }
 }
 
 void sanitize(char *message, int msg_size){
-    char i;
-    for(i = 0; i < msg_size; i++){
-        if(message[i] >= 97 && message[i] <= 122){
+    int i;
+    for (i = 0; i < msg_size; i++){
+        if (message[i] >=97 && message[i] <=122){
             message[i] -= 32;
         }
     }
@@ -203,4 +203,44 @@ int get_orders(char *message, int msg_size, char *code, char *order){
         }
     }
     return offset;
+}
+
+void menu(char *message, char code, char order, int msg_size){
+    if (code == 99 || code == 67){
+        int key = message[msg_size +5];
+        if(order == 101 || order == 69){
+            //do caessar cipher
+            printf("Caesar Encode");
+            //do_caesar_cipher..........
+        }
+        else if(order == 68 || order == 100){
+            printf("Caesar Decode");
+            //do_caesar_cipher..........
+        }
+        else{
+            printf("\n\nSomething went wrong!");
+        }
+    }
+    else if (code == 83 || code == 115){
+        char key[27];
+
+        int i;
+        for(i = msg_size + 5; i < msg_size + 31; i++){
+            printf("%c", message[i]);
+        }
+        //Substitution
+        if(order == 101 || order == 69){
+            //do sub cipher
+            printf("\n\nSUB Encode");
+        }
+        else if(order == 68 || order == 100){
+            printf("\n\nSUB Decode");
+        }
+        else{
+        printf("\n\nSomething went wrong!");
+    }
+    }
+    else{
+        printf("\n\nSomething went wrong!");
+    }
 }
