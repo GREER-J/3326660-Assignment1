@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 //Caesar Prototypes
 char caesar_do_translation(char letter, char key);
 void caesar_encode(char *message, int msg_size, char key, char *translated);
@@ -19,17 +18,22 @@ void substitution_decode(char *message, int msg_size, char *key, char *translate
 void do_substitution_cipher(char *message, int msg_size, char *key, char mode);
 
 //Menu Prototypes
-int get_input(char *message);
+int get_input(char *message, char *code, char *order);
 void output(char *message, int msg_size);
 void sanitize(char *message, int msg_size);
-void menu(void);
+int get_orders(char *message, int msg_size, char *code, char *order);
 
 
 //Main
-int main(){
-    menu();
+int main(void) {
+    char message[1000], order, code = 0;
+    int msg_size = get_input(message, &code, &order);
 
+    printf("%c: %c", code, order);
+    printf("\n\n");
+    output(message, msg_size);
     return 0;
+
 }
 
 /********************************   CAESAR CIPHER *******************************/
@@ -82,7 +86,7 @@ void do_caesar_cipher(char *message, int msg_size, char key, char mode){
 
 int caesar_get_key(void){
     int key;
-    printf("\n\nPlease enter a key: ");
+    printf("\nPlease enter a key: ");
     scanf("%d", &key);
     return key;
 }
@@ -140,7 +144,7 @@ void substitution_decode(char *message, int msg_size, char *key, char *translate
             translated[i] = letter;
         }
     }
-    }
+}
 
 void do_substitution_cipher(char *message, int msg_size, char *key, char mode){
     char translated[msg_size];
@@ -160,10 +164,13 @@ void do_substitution_cipher(char *message, int msg_size, char *key, char mode){
 
 /********************************   Get input from user *******************************/
 
-int get_input(char *message){
-    printf("Please enter your message: ");
-    scanf(" %[^\n]s", message);
+int get_input(char *message, char *code, char *order){
+    FILE *input;
+    input = fopen("input.txt", "r");
+    fscanf(input, "%[^\n]s", message);
     int msg_size = strlen(message);
+    int offset = get_orders(message, msg_size, code, order);
+    msg_size = offset;
     sanitize(message, msg_size);
     return msg_size;
 }
@@ -185,50 +192,15 @@ void sanitize(char *message, int msg_size){
     }
 }
 
-void menu(void){
-        int flag = -1;
-        char message[100], key, key_sub[30];
-        int msg_size;
-        printf("Press one (1) to encode with the caesar cipher\n");
-        printf("Press two (2) to decode with the caesar cipher\n");
-        printf("Press three (3) to encode with the substituion cipher\n");
-        printf("Press three (4) to decode with the substituion cipher\n");
-        printf("Your answer: ");
-        scanf(" %d", &flag);
-
-        switch(flag){
-            case 1:;
-            printf("\n");
-            msg_size = get_input(message);
-            key = caesar_get_key();
-            do_caesar_cipher(message, msg_size, key, 1);
-            break;
-
-            case 2:;
-            printf("\n");
-            msg_size = get_input(message);
-            key = caesar_get_key();
-            do_caesar_cipher(message, msg_size, key, 2);
-            break;
-
-            case 3:;
-            printf("\n");
-            msg_size =  get_input(message);
-            //key_sub = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
-            do_substitution_cipher(message, msg_size, key_sub, 1);
-            break;
-
-            case 4:;
-            printf("\n");
-            msg_size  = get_input(message);
-            //key_sub = "PHQGIUMEAYLNOFDXJKRCVSTZWB";
-            do_substitution_cipher(message, msg_size, key_sub, 2);
-            break;
-
-            default:
-            printf("\n\n");
-            printf("Invalid entry: Please try again.");
-            printf("\n\n");
-            menu();
+int get_orders(char *message, int msg_size, char *code, char *order){
+    int i;
+    int offset;
+    for(i = 0; i < msg_size; i++){
+        if(message[i] == 58){
+            offset = i;
+            *code = message[i + 1];
+            *order = message[i + 3];
         }
+    }
+    return offset;
 }
