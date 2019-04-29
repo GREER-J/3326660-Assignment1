@@ -448,6 +448,8 @@ void menu(char *message, char code, char order, int msg_size){
 }
 
 /*
+
+This is a broken attempt at cracking a substitution cipher. It will work I just didn't have the time to develop it. I'm putting it in so it's admissible.
 //Sorting
 int l;
 int tmp = 51;
