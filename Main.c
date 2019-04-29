@@ -26,16 +26,14 @@ void menu(char *message, char code, char order, int msg_size);
 
 
 /*-------------Main-----------*/
-/*  This funciton implements the actual math of the cipher.
-INPUTS: the letter to be encoded or decoded as a char (ascii number) ; key - number to be shifted by
+/*  This funciton is the start point for the whole progarm.
+INPUTS: This funciton does not take any inputs.
 CALCULATION: 
-                1) takes the given letter and takes away 65. This translates the letter to it's position from a capital A (65 in ascii)
-                2) Adds 260 to ensure that the total is alays positive, yet does not effect the % command later
-                3) Takes the result of the key % 26 (to try account any number key) and adds this to the result from 2
-                4) Takes this whole thing and % 26, this will gives an ajusted distance from A
-                5) Add 65 to turn it back into ascii text
-                6) Returns this value
-OUTPUT: The letter shifted by the key value in ascii code
+               1) Create a message that is 1000 characters long. This is the limit for message.
+               2) Creates the variable msg_size which is used throughout the program.
+               3) Creates the code and order flags used throuhout the program.
+               4) Runs the menu program that executes all the functions.
+OUTPUT: This code does not return anything.
 */
 
 //Main
