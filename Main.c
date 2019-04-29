@@ -446,3 +446,50 @@ void menu(char *message, char code, char order, int msg_size){
         printf("\n\nSomething went wrong!");
     }
 }
+
+/*
+//Sorting
+int l;
+int tmp = 51;
+for(l = 1; l < 51; l +=2){
+    char letter = frequency_count[l -1];
+    char amount = frequency_count[l];
+    if(amount < frequency_count[tmp]){
+        tmp = l;
+        printf("LOWER");
+    }
+}
+
+printf("TMP = %d, %c: %d",tmp, frequency_count[tmp-1], frequency_count[tmp]);
+
+}
+
+void substitution_get_count(char *message, char *frequency_count, int msg_size){
+    char c;
+    for(c = 0; c < 52; c+=2){
+        int sum = 0;
+        char i;
+        for(i = 0; i < msg_size; i++){
+            if(message[i] == frequency_count[c]){
+                sum += 1;
+            }
+        }
+        frequency_count[c + 1] = sum;
+    }
+}
+
+void substitution_show_frequency(char *frequency_count){
+    int x;
+    for(x = 0; x < 52; x+=2){
+    printf("%c: %d\n", frequency_count[x], frequency_count[x +1]);
+    }
+
+    char tmp = 52;
+    char y;
+    for(y = 1; y < 52; y +=2){
+    if(frequency_count[y] > frequency_count[tmp]){
+        tmp = y;
+    }
+    }
+}
+*/
