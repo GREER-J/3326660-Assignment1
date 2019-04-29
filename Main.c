@@ -25,6 +25,19 @@ int get_orders(char *message, int msg_size, char *code, char *order);
 void menu(char *message, char code, char order, int msg_size);
 
 
+/*-------------Main-----------*/
+/*  This funciton implements the actual math of the cipher.
+INPUTS: the letter to be encoded or decoded as a char (ascii number) ; key - number to be shifted by
+CALCULATION: 
+                1) takes the given letter and takes away 65. This translates the letter to it's position from a capital A (65 in ascii)
+                2) Adds 260 to ensure that the total is alays positive, yet does not effect the % command later
+                3) Takes the result of the key % 26 (to try account any number key) and adds this to the result from 2
+                4) Takes this whole thing and % 26, this will gives an ajusted distance from A
+                5) Add 65 to turn it back into ascii text
+                6) Returns this value
+OUTPUT: The letter shifted by the key value in ascii code
+*/
+
 //Main
 int main(void) {
     char message[1000],key[27], order, code = 0;
@@ -32,6 +45,8 @@ int main(void) {
     menu(message, code, order, msg_size);
     return 0;
 
+    
+    
 }
 
 /********************************   CAESAR CIPHER *******************************/
@@ -314,12 +329,17 @@ void sanitize(char *message, int msg_size){
 
 
 /*-------------get_orders-----------*/
-/*  This function is used to print stuff to the screen.
-INPUT: This function takes an array of type char called message and the length of the message (as an intiger).
+/*  This function is used to get the orders from the input.txt file.
+INPUT: This function takes an array of type char called message, the length of the message (as an intiger) and two pointers to,
+        flags contained in other functions.
 CALCULATION:
-            1) Loop through each letter in the message and print it to the screen.
+            1) Loop through each letter in the message and look for the separator being ":".
+            2) Note the position of this and look ahead a set number of places to check the order.
+            3) Because we set the format of input.txt the program knows exactly where to look.
+            4) Set the value of order and code to whatever is in those positions
+            5) Return the point where the marker is ":" for other programs.
            
-OUTPUT: This funciton doesn't return anything but does print whatever it's given to the screen.
+OUTPUT: This funciton returns the position of the offset marker and populates the code and orders flags.
 */
 int get_orders(char *message, int msg_size, char *code, char *order){
     int i;
@@ -333,6 +353,19 @@ int get_orders(char *message, int msg_size, char *code, char *order){
     }
     return offset;
 }
+
+/*-------------get_key-----------*/
+/*  This function is used to get the orders from the input.txt file.
+INPUT: This function takes an array of type char called message, the length of the message (as an intiger).
+CALCULATION:
+            1) Loop through each letter in the message starting from the offset (msg_size).
+            2) Each number has a value in ascii with 0 being 48.
+            3) We take the value that's in the position and take away 48, we have then converted it to decimal.
+            4) We then take the one in the 10's position and * it by ten to get the actual value.
+            5) We then add this to the running total. We do the same to the 1st collumn and return the result.
+           
+OUTPUT: This funciton returns key for the caesar cipher for other programs.
+*/
 
 int caesar_get_key(char *message, int msg_size){
     int sum, key = 0;
@@ -350,6 +383,17 @@ int caesar_get_key(char *message, int msg_size){
     return sum;
 }
 
+
+/*-------------Menu-----------*/
+/*  This function is used to execute the program.
+INPUT: This function takes an array of type char called message, the length of the message (as an intiger) and the orders and code flags.
+CALCULATION:
+            1) Checks the value of code. If it is a capital or lower case "C" it checks the order flag. If that Code is a C and the order,
+               is a D it runs the do_caesar_cipher in decode mode and hands over the required variables. If the order is an E it runs in encode mode.
+            2) If the code is a S it runs the substituion code in the same fassion.
+           
+OUTPUT: This funciton does not return things as it runs other functions.
+*/
 void menu(char *message, char code, char order, int msg_size){
     if (code == 99 || code == 67){
         int key = caesar_get_key(message, msg_size);
