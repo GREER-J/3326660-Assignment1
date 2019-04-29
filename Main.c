@@ -9,7 +9,7 @@ void caesar_encode(char *message, int msg_size, char key, char *translated);
 void caesar_decode(char *message, int msg_size, char key, char *translated);
 void do_caesar_cipher(char *message, int msg_size, char key, char mode);
 void do_casesar_brute_force(void);
-int caesar_get_key(void);
+int caesar_get_key(char *message, int msg_size);
 
 
 //Substitution Prototypes
@@ -30,8 +30,6 @@ int main(void) {
     char message[1000],key[27], order, code = 0;
     int msg_size = get_input(message, &code, &order);
     menu(message, code, order, msg_size);
-    printf("\n\n");
-    output(message, msg_size);
     return 0;
 
 }
@@ -39,7 +37,6 @@ int main(void) {
 /********************************   CAESAR CIPHER *******************************/
 
 /******************************   Encode / Decode    ************************************/
-
 
 char caesar_do_translation(char letter, char key){
     char translated = ((((letter - 65) +260) + (key % 26)) % 26) + 65;
@@ -84,11 +81,20 @@ void do_caesar_cipher(char *message, int msg_size, char key, char mode){
     output(translated, msg_size);
 }
 
-int caesar_get_key(void){
-    int key;
-    printf("\nPlease enter a key: ");
-    scanf("%d", &key);
-    return key;
+int caesar_get_key(char *message, int msg_size){
+    int sum, key = 0;
+    int offset = msg_size + 5;
+    int i;
+    for(i = 0; i < 2; i++){
+        key = message[i + offset] - 48;
+        if(i == 0){
+            sum += (key * 10);
+        }
+        else{
+            sum += key;
+        }
+    }
+    return sum;
 }
 
 /********************************   Attack Caeser cipher *******************************/
@@ -158,8 +164,6 @@ void do_substitution_cipher(char *message, int msg_size, char *key, char mode){
 }
 
 
-
-
 /********************************  MENU FUNCTIONS *******************************/
 
 /********************************   Get input from user *******************************/
@@ -207,15 +211,15 @@ int get_orders(char *message, int msg_size, char *code, char *order){
 
 void menu(char *message, char code, char order, int msg_size){
     if (code == 99 || code == 67){
-        int key = message[msg_size +5];
+        int key = caesar_get_key(message, msg_size);
         if(order == 101 || order == 69){
             //do caessar cipher
-            printf("Caesar Encode");
-            //do_caesar_cipher..........
+            printf("Caesar Encode, key = %d\n\n", key);
+            do_caesar_cipher(message, msg_size, key, 1);
         }
         else if(order == 68 || order == 100){
-            printf("Caesar Decode");
-            //do_caesar_cipher..........
+            printf("Caesar Decode, key = %d\n\n", key);
+            do_caesar_cipher(message, msg_size, key, 2);
         }
         else{
             printf("\n\nSomething went wrong!");
@@ -226,15 +230,30 @@ void menu(char *message, char code, char order, int msg_size){
 
         int i;
         for(i = msg_size + 5; i < msg_size + 31; i++){
-            printf("%c", message[i]);
+            key[i - (msg_size + 5)] = message[i];
         }
+        sanitize(key, 26);
+
         //Substitution
         if(order == 101 || order == 69){
             //do sub cipher
-            printf("\n\nSUB Encode");
+            printf("\n\nSUB Encode, key: ");
+            int x;
+            for(x = 0; x < 27; x++){
+                printf("%c", key[x]);
+            }
+            printf("\n\n");
+            do_substitution_cipher(message, msg_size, key, 1);
         }
         else if(order == 68 || order == 100){
-            printf("\n\nSUB Decode");
+            printf("\n\nSUB Decode, key: ");
+            int x;
+            for(x = 0; x < 27; x++){
+                printf("%c", key[x]);
+            }
+            printf("\n\n\n");
+            do_substitution_cipher(message, msg_size, key, 2);
+            
         }
         else{
         printf("\n\nSomething went wrong!");
